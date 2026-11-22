@@ -1,0 +1,110 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House 3D Viewer</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#dfe8f0;font-family:Arial,Helvetica,sans-serif}
+  #c{display:block;width:100vw;height:100vh}
+  #ui{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.93);border-radius:8px;padding:10px 12px;max-width:300px;box-shadow:0 2px 10px rgba(0,0,0,.15);font-size:13px}
+  #ui h3{margin:0 0 6px;font-size:15px} #ui .row{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+  #ui button{border:1px solid #bbb;background:#fff;border-radius:5px;padding:4px 7px;font-size:12px;cursor:pointer}
+  #ui button.on{background:#2d3b4e;color:#fff;border-color:#2d3b4e} #ui label{margin-right:10px;white-space:nowrap}
+  #cap{position:absolute;left:0;right:0;bottom:0;background:rgba(20,24,30,.78);color:#fff;font-size:22px;padding:10px 18px;display:none}
+  #cap b{font-size:24px} #help{color:#555;font-size:11px;margin-top:6px}
+  body.shot #ui{display:none} body.shot #cap{display:block}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <h3>Family house, 3D viewer</h3>
+  <div class="row" id="plans"></div>
+  <div class="row" id="views"></div>
+  <div class="row"><label><input type="checkbox" id="tRoof" checked> Roof</label><label><input type="checkbox" id="tFF" checked> First floor</label><label><input type="checkbox" id="tLab"> Room names</label></div>
+  <div id="help">Drag to rotate, right-drag to pan, scroll to zoom. Massing model from the measured plans; finishes and furniture are indicative.</div>
+</div>
+<div id="cap"></div>
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script src="data/dataA.js"></script>
+<script src="data/dataB.js"></script>
+<script src="data/dataC.js"></script>
+<script src="model.js"></script>
+<script>
+const VIEWS = {
+  'street':        { t: 'Street view (front elevation)', p: [19, 3.5, 130], g: [19, 9.5, 40], fov: 45 },
+  'front-left':    { t: 'Aerial, front-left corner', p: [-50, 58, 132], g: [17, 5, 38], fov: 40 },
+  'front-right':   { t: 'Aerial, front-right corner', p: [90, 58, 132], g: [21, 5, 38], fov: 40 },
+  'rear':          { t: 'Aerial, rear-right corner', p: [88, 62, -58], g: [19, 5, 32], fov: 40 },
+  'cutaway':       { t: 'Cutaway, roof removed', p: [-42, 100, 118], g: [19, 3, 36], fov: 40, roof: false, lab: 'FF' },
+  'ground-floor':  { t: 'Ground floor, first floor removed', p: [-32, 88, 108], g: [19, 0, 36], fov: 40, roof: false, ff: false, lab: 'GF' },
+  'first-floor':   { t: 'First floor, roof removed (see-through to the double height)', p: [19, 112, 104], g: [19, 5, 34], fov: 40, roof: false, lab: 'FF' },
+  'plan-gf':       { t: 'Top view, ground floor', p: [19, 175, 36.02], g: [19, 0, 36], fov: 30, roof: false, ff: false, lab: 'GF' },
+  'plan-ff':       { t: 'Top view, first floor', p: [19, 175, 36.02], g: [19, 0, 36], fov: 30, roof: false, lab: 'FF' },
+  'section-cross': { t: 'Cross-section through the double-height space (looking back)', p: [19, 14, 100], g: [19, 10, 30], fov: 38, clip: ['z', 36.5] },
+  'section-long':  { t: 'Long section, right side cut away (looking left)', p: [104, 15, 36], g: [12, 10, 36], fov: 45, clip: ['x', 24] },
+  'in-entrance':   { t: 'Inside: from the entrance looking into the house', p: [16, 5.5, 55.5], g: [16, 9, 28], fov: 72, inside: true },
+  'in-living':     { t: 'Inside: from the living room looking across', p: [35.5, 5.5, 41.5], g: [6, 10, 31], fov: 72, inside: true },
+  'in-firstfloor': { t: 'Inside: first floor, looking over the double height', p: [20.5, 17, 41.5], g: [5, 2, 32], fov: 72, inside: true, per: { A: { p: [19, 16.5, 54.5], g: [30, 3, 34] }, C: { p: [34.6, 16.5, 27.4], g: [10, 3, 38] } } },
+};
+const SHORT = { 'street': 'Street', 'front-left': 'Front-left', 'front-right': 'Front-right', 'rear': 'Rear', 'cutaway': 'Roof off', 'ground-floor': 'Ground floor', 'first-floor': 'First floor', 'plan-gf': 'Top: GF', 'plan-ff': 'Top: FF', 'section-cross': 'Cross-section', 'section-long': 'Long section', 'in-entrance': 'Inside: entrance', 'in-living': 'Inside: living', 'in-firstfloor': 'Inside: first floor' };
+const PLANS = { A: "Architect's original", B: 'Plan 2: bridge in the middle', C: 'Plan 5: bridge on the right wall' };
+
+if (THREE.ColorManagement) THREE.ColorManagement.legacyMode = false;
+const params = Object.fromEntries(new URLSearchParams(location.hash.slice(1)));
+const SHOT = !!params.shot;
+if (SHOT) document.body.classList.add('shot');
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: SHOT });
+renderer.setPixelRatio(SHOT ? 1 : Math.min(2, devicePixelRatio));
+renderer.setSize(innerWidth, innerHeight, false);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.92;
+renderer.localClippingEnabled = true;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xdbe6ef);
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.3, 2000);
+scene.add(new THREE.HemisphereLight(0xffffff, 0xb9b09c, 0.62));
+scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+const sun = new THREE.DirectionalLight(0xfff4e2, 0.95); sun.position.set(-70, 130, 165); sun.target.position.set(19, 0, 36);
+sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096); Object.assign(sun.shadow.camera, { left: -95, right: 95, top: 95, bottom: -95, near: 10, far: 450 }); sun.shadow.bias = -0.0004;
+scene.add(sun, sun.target);
+const inLights = new THREE.Group(); [[19, 9.5, 36], [19, 19.5, 52], [10, 9.5, 48], [30, 9.5, 30]].forEach(p => { const l = new THREE.PointLight(0xfff1dc, 0.45, 70, 1.6); l.position.set(...p); inLights.add(l); }); scene.add(inLights);
+let controls = null;
+if (!SHOT) { controls = new THREE.OrbitControls(camera, canvas); controls.addEventListener('change', render); }
+
+let house = null, cur = { plan: params.plan || 'B', view: params.view || 'front-left' };
+function setPlan(k) {
+  if (house) { scene.remove(house); house.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+  house = buildHouse(THREE, PLAN_DATA[k]); scene.add(house); cur.plan = k; applyView(cur.view, true);
+}
+function applyView(k, keepCam) {
+  const v0 = VIEWS[k]; const v = Object.assign({}, v0, (v0.per && v0.per[cur.plan]) || {}); cur.view = k; const g = house.userData.groups;
+  const roof = v.roof !== false, ff = v.ff !== false;
+  if (!keepCam || SHOT || true) { camera.position.set(...v.p); camera.fov = v.fov; camera.updateProjectionMatrix(); if (controls) { controls.target.set(...v.g); controls.update(); } else camera.lookAt(...v.g); }
+  document.getElementById('tRoof').checked = roof; document.getElementById('tFF').checked = ff; document.getElementById('tLab').checked = !!v.lab;
+  setVis(roof, ff, v.lab || null);
+  let planes = [];
+  if (v.clip) planes = [v.clip[0] === 'z' ? new THREE.Plane(new THREE.Vector3(0, 0, -1), v.clip[1]) : new THREE.Plane(new THREE.Vector3(-1, 0, 0), v.clip[1])];
+  scene.traverse(o => { if (o.material && !o.isSprite) o.material.clippingPlanes = planes; });
+  inLights.visible = !!v.inside || !roof || !!v.clip;
+  document.getElementById('cap').innerHTML = `<b>${PLANS[cur.plan]}</b> &nbsp;|&nbsp; ${v.t}`;
+  document.querySelectorAll('#plans button').forEach(b => b.classList.toggle('on', b.dataset.k === cur.plan));
+  document.querySelectorAll('#views button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+  render();
+}
+function setVis(roof, ff, lab) {
+  const g = house.userData.groups;
+  g.roof.visible = roof && ff; g.ff.visible = ff; g.ffSlab.visible = ff;
+  g.labelsGF.visible = !!(lab === 'GF' || (lab && !ff)); g.labelsFF.visible = !!(lab === 'FF' && ff);
+  render();
+}
+function render() { renderer.render(scene, camera); }
+for (const [k, n] of Object.entries(PLANS)) { const b = document.createElement('button'); b.textContent = n; b.dataset.k = k; b.onclick = () => setPlan(k); document.getElementById('plans').appendChild(b); }
+for (const [k, v] of Object.entries(VIEWS)) { const b = document.createElement('button'); b.textContent = SHORT[k] || k; b.title = v.t; b.dataset.k = k; b.onclick = () => applyView(k); document.getElementById('views').appendChild(b); }
+document.getElementById('tRoof').onchange = e => setVis(e.target.checked, document.getElementById('tFF').checked, document.getElementById('tLab').checked ? (document.getElementById('tFF').checked ? 'FF' : 'GF') : null);
+document.getElementById('tFF').onchange = e => setVis(document.getElementById('tRoof').checked, e.target.checked, document.getElementById('tLab').checked ? (e.target.checked ? 'FF' : 'GF') : null);
+document.getElementById('tLab').onchange = e => setVis(document.getElementById('tRoof').checked, document.getElementById('tFF').checked, e.target.checked ? (document.getElementById('tFF').checked ? 'FF' : 'GF') : null);
+addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); render(); });
+camera.aspect = innerWidth / innerHeight;
+setPlan(cur.plan);
+if (SHOT) { render(); render(); document.title = 'READY'; }
+</script>
+</body></html>

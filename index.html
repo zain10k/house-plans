@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>House Plans</title>
+<meta name="description" content="Joint-family house: architect's original layout compared with two owner revisions, with measured floor plans and 3D views.">
+<style>
+  :root{--bg:#f6f5f2;--card:#fff;--text:#1c1d1f;--muted:#5d6168;--line:#e2e0db;--accent:#2d3b4e}
+  @media (prefers-color-scheme: dark){:root{--bg:#16181b;--card:#202327;--text:#ecebe8;--muted:#a3a7ad;--line:#33373c;--accent:#9db4d3}}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;line-height:1.55}
+  main{max-width:1100px;margin:0 auto;padding:40px 16px 60px}
+  h1{font-size:30px;margin:0 0 6px}h2{font-size:20px;margin:36px 0 12px}
+  p.lead{color:var(--muted);margin:0 0 24px;max-width:760px}
+  .hero{border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+  .hero img{width:100%;display:block}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--text)}
+  a.card:hover{border-color:var(--accent)}a.card b{display:block;font-size:16px;margin-bottom:4px}a.card span{color:var(--muted);font-size:14px}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .opt img{width:100%;display:block;border-bottom:1px solid var(--line)}.opt div{padding:12px 14px}
+  .opt b{display:block}.opt span{color:var(--muted);font-size:14px}
+  .tag{display:inline-block;background:var(--accent);color:var(--bg);border-radius:4px;padding:0 7px;font-size:12px;font-weight:700;margin-right:6px}
+  footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style></head>
+<body><main>
+  <h1>House plans: three layout options</h1>
+  <p class="lead">A 5-bedroom, two-storey joint-family house. The architect's original layout is compared with two owner revisions that move the kitchen and run a double-height space across the full width of the house. Floor plans are measured from the original drawing; the 3D views are massing models built from those plans.</p>
+
+  <div class="hero"><img src="3d/images/B-section-cross.png" alt="Cross-section through the double-height space of Plan 2"></div>
+
+  <h2>Explore</h2>
+  <div class="grid">
+    <a class="card" href="3d/viewer/"><b>Interactive 3D viewer</b><span>Spin, zoom and switch between the three designs, 14 preset views, roof and floor on/off.</span></a>
+    <a class="card" href="3d/comparison.html"><b>3D comparison</b><span>14 views, each with all three designs side by side.</span></a>
+    <a class="card" href="plans/shortlist.pdf"><b>Shortlist sheet (PDF)</b><span>One page: both floors of all three options with the key numbers.</span></a>
+    <a class="card" href="plans/plan-2-middle-bridge.pdf"><b>Plan 2 floor plans (PDF)</b><span>Measured ground and first floor plans.</span></a>
+    <a class="card" href="plans/plan-5-right-bridge.pdf"><b>Plan 5 floor plans (PDF)</b><span>Measured ground and first floor plans.</span></a>
+  </div>
+
+  <h2>The three options</h2>
+  <div class="opts">
+    <div class="opt"><img src="3d/images/A-section-cross.png" alt="Architect's original, cross-section"><div><b><span class="tag">A</span>Architect's original</b><span>Double-height space as a front-to-back strip on the right; large shared dining zone; simplest and cheapest to build.</span></div></div>
+    <div class="opt"><img src="3d/images/B-section-cross.png" alt="Plan 2, cross-section"><div><b><span class="tag">B</span>Plan 2: bridge in the middle</b><span>Kitchen and dining swapped; full-width double height; wide entrance hall; floating L-stair; shortest route upstairs.</span></div></div>
+    <div class="opt"><img src="3d/images/C-section-cross.png" alt="Plan 5, cross-section"><div><b><span class="tag">C</span>Plan 5: bridge on the right wall</b><span>As Plan 2, but nothing crosses the open space; bedroom 3 at the front left; longest route to bedroom 3.</span></div></div>
+  </div>
+
+  <footer>Concept layouts for discussion, not for construction. Sizes, structure, services and local by-laws must be confirmed by the architect. Location and personal details are intentionally left out.</footer>
+</main></body></html>
