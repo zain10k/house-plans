@@ -19,6 +19,13 @@
   .opt img{width:100%;display:block;border-bottom:1px solid var(--line)}.opt div{padding:12px 14px}
   .opt b{display:block}.opt span{color:var(--muted);font-size:14px}
   .tag{display:inline-block;background:var(--accent);color:var(--bg);border-radius:4px;padding:0 7px;font-size:12px;font-weight:700;margin-right:6px}
+  h3{font-size:17px;margin:26px 0 10px}
+  .shots{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .shared{display:grid;grid-template-columns:1fr 1fr;gap:14px}.shared .col{display:grid;gap:14px;align-content:start}
+  @media (max-width:640px){.shots,.shared{grid-template-columns:1fr}}
+  figure.shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  figure.shot a{display:block}figure.shot img{width:100%;height:auto;display:block;border-bottom:1px solid var(--line)}
+  figure.shot figcaption{padding:10px 14px;font-size:14px;color:var(--muted)}figure.shot figcaption b{color:var(--text)}
   footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
 </style></head>
 <body><main>
@@ -34,6 +41,42 @@
     <a class="card" href="plans/shortlist.pdf"><b>Shortlist sheet (PDF)</b><span>One page: both floors of all three options with the key numbers.</span></a>
     <a class="card" href="plans/plan-2-middle-bridge.pdf"><b>Plan 2 floor plans (PDF)</b><span>Measured ground and first floor plans.</span></a>
     <a class="card" href="plans/plan-5-right-bridge.pdf"><b>Plan 5 floor plans (PDF)</b><span>Measured ground and first floor plans.</span></a>
+  </div>
+
+  <h2 id="renders">Realistic renders</h2>
+  <p class="lead" style="margin-bottom:6px">Photo-realistic views of each design at dusk, rendered from the measured plans. All three designs have an open kitchen with an island and a set-back entrance. Finishes follow the owner's material list; furniture and decor are indicative. Click any image for the full size.</p>
+
+  <h3>Same for all three designs</h3>
+  <div class="shared">
+    <figure class="shot"><a href="renders/front-dusk.jpg"><img src="renders/thumbs/front-dusk.jpg" width="600" height="750" loading="lazy" alt="Front of the house at dusk"></a><figcaption><b>Front at dusk.</b> Stone entrance portal with the door set back; the drawing room projects forward.</figcaption></figure>
+    <div class="col">
+      <figure class="shot"><a href="renders/drawing-room.jpg"><img src="renders/thumbs/drawing-room.jpg" width="800" height="500" loading="lazy" alt="Drawing room"></a><figcaption><b>Drawing room.</b> Entered from inside the house through a walnut sliding door.</figcaption></figure>
+      <figure class="shot"><a href="renders/aerial-dusk.jpg"><img src="renders/thumbs/aerial-dusk.jpg" width="800" height="500" loading="lazy" alt="Aerial view of the house at dusk"></a><figcaption><b>Aerial at dusk.</b> Neighbouring houses are shown as plain blocks.</figcaption></figure>
+    </div>
+  </div>
+
+  <h3><span class="tag">A</span>Architect's original</h3>
+  <div class="shots">
+    <figure class="shot"><a href="renders/a1-entrance.jpg"><img src="renders/thumbs/a1-entrance.jpg" width="800" height="500" loading="lazy" alt="Architect's original: entrance"></a><figcaption><b>Entrance.</b> Looking in from the front door.</figcaption></figure>
+    <figure class="shot"><a href="renders/a2-open-kitchen.jpg"><img src="renders/thumbs/a2-open-kitchen.jpg" width="800" height="500" loading="lazy" alt="Architect's original: open kitchen"></a><figcaption><b>Open kitchen.</b> Marble island, looking towards the lounge.</figcaption></figure>
+    <figure class="shot"><a href="renders/a3-double-height.jpg"><img src="renders/thumbs/a3-double-height.jpg" width="800" height="500" loading="lazy" alt="Architect's original: double-height space"></a><figcaption><b>Double height.</b> The strip on the right side, with the stair.</figcaption></figure>
+    <figure class="shot"><a href="renders/a4-first-floor.jpg"><img src="renders/thumbs/a4-first-floor.jpg" width="800" height="500" loading="lazy" alt="Architect's original: first floor"></a><figcaption><b>First floor.</b> Looking down into the double height.</figcaption></figure>
+  </div>
+
+  <h3><span class="tag">B</span>Plan 2: bridge in the middle</h3>
+  <div class="shots">
+    <figure class="shot"><a href="renders/b1-entrance.jpg"><img src="renders/thumbs/b1-entrance.jpg" width="800" height="500" loading="lazy" alt="Plan 2: entrance"></a><figcaption><b>Entrance.</b> Looking in from the front door.</figcaption></figure>
+    <figure class="shot"><a href="renders/b2-open-kitchen.jpg"><img src="renders/thumbs/b2-open-kitchen.jpg" width="800" height="500" loading="lazy" alt="Plan 2: open kitchen"></a><figcaption><b>Open kitchen.</b> Marble island, looking towards the lounge.</figcaption></figure>
+    <figure class="shot"><a href="renders/b3-double-height.jpg"><img src="renders/thumbs/b3-double-height.jpg" width="800" height="500" loading="lazy" alt="Plan 2: double-height space"></a><figcaption><b>Double height.</b> Full-width open space with the bridge across the middle.</figcaption></figure>
+    <figure class="shot"><a href="renders/b4-first-floor-bridge.jpg"><img src="renders/thumbs/b4-first-floor-bridge.jpg" width="800" height="500" loading="lazy" alt="Plan 2: first-floor bridge"></a><figcaption><b>First floor.</b> The bridge and the floating stair.</figcaption></figure>
+  </div>
+
+  <h3><span class="tag">C</span>Plan 5: bridge on the right wall</h3>
+  <div class="shots">
+    <figure class="shot"><a href="renders/c1-entrance.jpg"><img src="renders/thumbs/c1-entrance.jpg" width="800" height="500" loading="lazy" alt="Plan 5: entrance"></a><figcaption><b>Entrance.</b> Looking in from the front door (ground floor as in Plan 2).</figcaption></figure>
+    <figure class="shot"><a href="renders/c2-open-kitchen.jpg"><img src="renders/thumbs/c2-open-kitchen.jpg" width="800" height="500" loading="lazy" alt="Plan 5: open kitchen"></a><figcaption><b>Open kitchen.</b> Marble island, looking towards the lounge (as in Plan 2).</figcaption></figure>
+    <figure class="shot"><a href="renders/c3-double-height.jpg"><img src="renders/thumbs/c3-double-height.jpg" width="800" height="500" loading="lazy" alt="Plan 5: double-height space"></a><figcaption><b>Double height.</b> Nothing crosses the open space; the walkway runs along the right wall.</figcaption></figure>
+    <figure class="shot"><a href="renders/c4-first-floor-right-bridge.jpg"><img src="renders/thumbs/c4-first-floor-right-bridge.jpg" width="800" height="500" loading="lazy" alt="Plan 5: first floor with the right-wall bridge"></a><figcaption><b>First floor.</b> The walkway along the right wall.</figcaption></figure>
   </div>
 
   <h2>Walkthrough videos</h2>
