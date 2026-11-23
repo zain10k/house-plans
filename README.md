@@ -13,6 +13,7 @@ A 5-bedroom, two-storey joint-family house. The architect's original layout is c
 ## Contents
 - `3d/viewer/`: interactive 3D viewer (three.js): three designs, 14 preset views, roof/floor toggles
 - `3d/comparison.html`: 14 views with all three designs side by side; `3d/images/` holds the 42 renders
+- `videos/`: 94-second walkthrough video of each design (MP4, 1280×720)
 - `plans/`: measured floor plans for Plan 2 and Plan 5 (PDF/PNG/SVG) and a one-page shortlist sheet
 
 ## Notes
